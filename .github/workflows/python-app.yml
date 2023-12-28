@@ -47,6 +47,10 @@ jobs:
         git add .
         git commit -m "Values Changed"
 
+    - name: list
+      run: |
+        ls
+        
     - name: Push Changes
       uses: ad-m/github-push-action@v0.6.0
       with:
