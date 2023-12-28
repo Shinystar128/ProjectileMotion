@@ -76,3 +76,5 @@ class Test(Scene):
         p.launch()
         self.add(p)
         self.wait(5)
+
+Test().render()
