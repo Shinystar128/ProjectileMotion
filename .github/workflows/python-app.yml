@@ -51,8 +51,8 @@ jobs:
       run: |
         ls
         
-    - name: Push changes
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ github.ref }}
+    - name: Push changes to main
+        uses:ad-m/github-push-action@master
+        with:github_token:${{ secrets.GITHUB_TOKEN }}
+        branch:main
+        force:true
