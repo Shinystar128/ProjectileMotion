@@ -1,27 +1,45 @@
-name: Auto-push to main
-
+name: Continuous Integration
 on:
   push:
-    branches: [ main ]  # Trigger only on pushes to the main branch
-
+    branches:
+      - main
+    # Ignore changes in folders that are affected by the auto commit. (Node.js project)
+    paths-ignore: 
+      - 'coverage/**'
+      - 'devdist/**'
+      - 'dist/**'
+      - 'docs/**'
+  pull_request:
+    branches:
+      - main
 jobs:
-  build-and-push:
+  build:
     runs-on: ubuntu-latest
-
+    env: 
+      CI_COMMIT_MESSAGE: Continuous Integration Build Artifacts
+      CI_COMMIT_AUTHOR: Continuous Integration
     steps:
-      - uses: actions/checkout@v3
+    - uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.WORKFLOW_GIT_ACCESS_TOKEN }}
 
-      - name: Make some changes  # Replace with your actual job steps
-        run: |
-          echo "Making some changes to the files..."
-          # Add your job tasks here, e.g., building, testing, etc.
-          touch updated-file.txt
-          git add updated-file.txt
-          git commit -m "Automatic commit from GitHub Actions"
+    # Build steps
+    - uses: actions/setup-node@v3
+      with:
+        node-version: '12' 
+    - name: Node Install
+      run: npm ci
+    - name: Node Build (lint, test, coverage, doc, build, package)
+      run: npm run package
 
-      - name: Push changes to main
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
-          force: true
+    # Commit and push all changed files. 
+    # Must only affect files that are listed in "paths-ignore".
+    - name: GIT Commit Build Artifacts (coverage, dist, devdist, docs)
+      # Only run on main branch push (e.g. pull request merge).
+      if: github.event_name == 'push'
+      run: |
+        git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
+        git config --global user.email "username@users.noreply.github.com"
+        git add coverage devdist dist docs
+        git commit -m "${{ env.CI_COMMIT_MESSAGE }}"
+        git push
