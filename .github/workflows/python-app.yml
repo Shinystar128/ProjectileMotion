@@ -1,45 +1,51 @@
-name: Continuous Integration
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: Renders Projectile Motion
+
 on:
   push:
-    branches:
-      - main
-    # Ignore changes in folders that are affected by the auto commit. (Node.js project)
-    paths-ignore: 
-      - 'coverage/**'
-      - 'devdist/**'
-      - 'dist/**'
-      - 'docs/**'
+    branches: [ "main" ]
   pull_request:
-    branches:
-      - main
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
 jobs:
   build:
+
     runs-on: ubuntu-latest
-    env: 
-      CI_COMMIT_MESSAGE: Continuous Integration Build Artifacts
-      CI_COMMIT_AUTHOR: Continuous Integration
+
     steps:
     - uses: actions/checkout@v3
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
       with:
-        token: ${{ secrets.WORKFLOW_GIT_ACCESS_TOKEN }}
-
-    # Build steps
-    - uses: actions/setup-node@v3
-      with:
-        node-version: '12' 
-    - name: Node Install
-      run: npm ci
-    - name: Node Build (lint, test, coverage, doc, build, package)
-      run: npm run package
-
-    # Commit and push all changed files. 
-    # Must only affect files that are listed in "paths-ignore".
-    - name: GIT Commit Build Artifacts (coverage, dist, devdist, docs)
-      # Only run on main branch push (e.g. pull request merge).
-      if: github.event_name == 'push'
+        python-version: "3.10"
+    - name: Install dependencies
       run: |
-        git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
-        git config --global user.email "username@users.noreply.github.com"
-        git add coverage devdist dist docs
-        git commit -m "${{ env.CI_COMMIT_MESSAGE }}"
+        sudo apt update
+        sudo apt install build-essential python3-dev libcairo2-dev libpango1.0-dev ffmpeg texlive -y
+        python -m pip install --upgrade pip
+        pip install flake8 pytest
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    # - name: Test with pytest
+    #   run: |
+    #     python3 Projectile.py
+
+    - name: update file and push to remote
+      run: |
+        echo "Test push commit to the remote in the workflow" >> test.txt
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+        git add -A
+        git commit -m "Update test.txt"
         git push
