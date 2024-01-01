@@ -6,12 +6,12 @@ jobs:
   test-and-push:
     runs-on: ubuntu-latest  # Specify the runner environment
 
-    # steps:
-    #   - uses: actions/checkout@v3  # Check out the code
-    #   - name: Set up Python  # Set up the Python environment
-    #     uses: actions/setup-python@v4
-    #     with:
-    #       python-version: '3.x'  # Replace '3.x' with your desired version
+    steps:
+      - uses: actions/checkout@v3  # Check out the code
+      - name: Set up Python  # Set up the Python environment
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'  # Replace '3.x' with your desired version
       - name: Install dependencies
         run: |
           sudo apt update
