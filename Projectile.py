@@ -64,7 +64,7 @@ class Projectile(VMobject):
     def stop(self):
         self.scene.remove_updater(self.scene.updaters[-1])
 
-class Test(Scene):
+class ProjectileMotion(Scene):
     def construct(self):
         p = Projectile(self, x0= -4, y0= -2, v0= 10, theta= PI/5)
         self.add(NumberPlane())
