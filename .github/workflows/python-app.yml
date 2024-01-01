@@ -43,9 +43,8 @@ jobs:
     - name: update file and push to remote
       run: |
         echo "Test push commit to the remote in the workflow" >> test.txt
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-        git add -A
+        git config --local user.email "fhaya420@gmail.com"
+        git config --local user.name "Shinystar128"
+        git add .
         git commit -m "Update test.txt"
         git push
