@@ -67,10 +67,10 @@ class Projectile(VMobject):
 
 class Test(Scene):
     def construct(self):
-        p = Projectile(self, -5, -3, 15, PI/3)
+        p = Projectile(self, -5, -4, 15, PI/3)
         self.add(NumberPlane())
         p.x_tracker()
-        # p.y_tracker()
+        p.y_tracker()
         self.add(p)
         self.wait(2)
         p.launch()
