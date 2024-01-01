@@ -66,7 +66,7 @@ class Projectile(VMobject):
 
 class ProjectileMotion(Scene):
     def construct(self):
-        p = Projectile(self, x0= -4, y0= -2, v0= 15, theta= PI/4)
+        p = Projectile(self, x0= -6, y0= -3, v0= 15, theta= PI/4)
         self.add(NumberPlane())
         p.x_tracker()
         p.y_tracker()
