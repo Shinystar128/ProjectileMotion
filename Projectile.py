@@ -6,8 +6,7 @@ class Projectile(VMobject):
                  x0    : int | float = 0,         # Initial x Position
                  y0    : int | float = 0,         # Initial y Position
                  v0    : int | float = 1,         # Initial Velocity the velocity vector
-                 theta : int | float = PI/4,      # Angle of launch
-                 includeXTracker : bool = True
+                 theta : int | float = PI/4       # Angle of launch
                  ):
         super().__init__()
         self.theta = theta
@@ -67,7 +66,7 @@ class Projectile(VMobject):
 
 class Test(Scene):
     def construct(self):
-        p = Projectile(self, -5, -4, 15, PI/3)
+        p = Projectile(self, -5, -3, 15, PI/3)
         self.add(NumberPlane())
         p.x_tracker()
         p.y_tracker()
